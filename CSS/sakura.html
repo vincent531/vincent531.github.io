@@ -1,0 +1,2838 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+$white-color: #ffffff;
+$hair-color: #292929;
+$skin-color: #ffdcc0;
+$lip-color: #c74647;
+$blush-color: #fc8d8e;
+$pin-color: #a1d6ff;
+
+$doll-1-color-1: #059bfa;
+$doll-1-color-2: #9bd4ff;
+
+$doll-2-color-1: #facc3c;
+$doll-2-color-2: #d9461c;
+$doll-2-color-3: #ff633a;
+
+$doll-3-color-1: #70b690;
+$doll-3-color-2: #9ed79b;
+$doll-3-color-3: #c1ea82;
+$doll-3-color-4: #377b78;
+
+$doll-4-color-1: #ff95a0;
+$doll-4-color-2: #ca2c47;
+$doll-4-color-3: #881545;
+
+$doll-5-color-1: #2e7e3d;
+$doll-5-color-2: #65cb67;
+$doll-5-color-3: #ebe859;
+
+$doll-6-color-1: #c01b1e;
+$doll-6-color-2: #fcb738;
+$doll-6-color-3: #d32f2e;
+$doll-6-color-4: #a61314;
+
+*,
+*:before,
+*:after {
+	box-sizing: border-box;
+}
+
+@mixin flower-style($center: ()) {
+	position: absolute;
+
+	@if map-has-key($center, size) {
+		&::after {
+			content: "";
+			position: absolute;
+			border-radius: 50%;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: map-get($center, size);
+			height: map-get($center, size);
+			background: map-get($center, color);
+		}
+	}
+}
+
+@mixin petal-shape($width, $height, $color, $offset: 0px, $border-radius: 50%) {
+	.petal {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		border-radius: $border-radius;
+		width: $width;
+		height: $height;
+		margin-left: -#{$width/2};
+		margin-top: -#{$height + $offset};
+		transform-origin: 50% #{$height + $offset};
+		background: $color;
+	}
+}
+
+@mixin petal-size($petals: 6) {
+	@for $i from 1 through $petals {
+		.petal-#{$petals}:nth-child(#{$i}) {
+			transform: rotate(#{($i - 1)*(360/$petals)}deg);
+		}
+	}
+}
+
+body {
+	display: flex;
+	align-items: center;
+	height: 100vh;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.doll {
+	width: 270px;
+	height: 420px;
+	margin: 20px;
+	position: relative;
+	overflow: hidden;
+	cursor: pointer;
+
+	.head,
+	.body,
+	.hair,
+	.pin,
+	.face,
+	.bun,
+	.fringe,
+	.eyes,
+	.blush,
+	.lips,
+	.bow,
+	.arm,
+	.robe,
+	.belt {
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+
+		&::before,
+		&::after {
+			position: absolute;
+			content: "";
+		}
+	}
+
+	.head {
+		top: 120px;
+		height: 120px;
+		width: 150px;
+		background: $skin-color;
+		border-radius: 50%;
+		z-index: 2;
+	}
+
+	.hair {
+		top: 50px;
+		background: $hair-color;
+		width: 200px;
+		height: 200px;
+		border-radius: 50%;
+	}
+
+	.bun {
+		z-index: -1;
+		background: $hair-color;
+		top: 0;
+		width: 80px;
+		height: 80px;
+		border-radius: 50%;
+	}
+
+	.pin {
+		top: 40px;
+		height: 8px;
+		border-radius: 4px;
+		background: $pin-color;
+		transform-origin: 100% 50%;
+
+		&::before {
+			border-radius: 50%;
+			width: 30px;
+			height: 30px;
+			left: 0;
+			top: 50%;
+			transform: translateY(-50%);
+			background: $doll-3-color-3;
+		}
+	}
+
+	.fringe {
+		background: $hair-color;
+		width: 150px;
+		height: 40px;
+
+		&::before,
+		&::after {
+			top: 20px;
+			border-style: solid;
+			border-color: transparent;
+		}
+	}
+
+	.face {
+		bottom: 15px;
+		height: 45px;
+		width: 105px;
+	}
+
+	.eyes {
+		top: 10px;
+
+		&::after,
+		&::before {
+			top: 0;
+			width: 28px;
+			height: 15px;
+			border-radius: 50%;
+			background: $skin-color;
+			box-shadow: 0 -6px 0 0 $hair-color, 0 -9px 0 -2px $hair-color,
+				0 -11px 0 -4px $hair-color;
+			left: 50%;
+			margin-left: -15px;
+		}
+
+		&::before {
+			transform: translateX(-28px);
+		}
+
+		&::after {
+			transform: translateX(28px);
+		}
+	}
+
+	.blush {
+		bottom: 5px;
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		opacity: 0.35;
+		box-shadow: -40px 0 0 0 $blush-color, 40px 0 0 0 $blush-color;
+		transition: opacity 2.5s ease-in-out 1.5s;
+	}
+
+	.lips {
+		bottom: 5px;
+		width: 18px;
+		height: 6px;
+		border-radius: 0 0 9px 9px/ 0 0 6px 6px;
+		background: $lip-color;
+
+		&::before {
+			top: -8px;
+			border-color: transparent transparent $lip-color transparent;
+			border-style: solid;
+			border-width: 4px 7px;
+			width: 18px;
+		}
+	}
+
+	.body {
+		bottom: -65px;
+		width: 170px;
+		height: 270px;
+		z-index: 1;
+		border-radius: 50% 50% 50% 50%/70% 70% 60% 60%;
+	}
+
+	.robe {
+		z-index: 2;
+		border: 5px solid transparent;
+		border-top-width: 20px;
+		border-bottom: 0;
+		width: 130px;
+		top: 50px;
+
+		&::before {
+			border: 5px solid transparent;
+			border-top-width: 20px;
+			border-top-color: inherit;
+			width: 75px;
+			left: 45%;
+			transform: translateX(-50%) translateY(-60px) rotate(90deg);
+		}
+
+		&::after {
+			border-top: 30px solid transparent;
+			border-left: 20px solid transparent;
+			width: 100px;
+			height: 120px;
+			transform-origin: 0 0;
+			transform: translateX(-5px) translateY(-20px) rotate(45deg);
+		}
+	}
+
+	&:nth-child(1) {
+		.hair {
+			height: 220px;
+			background: linear-gradient(to bottom, $hair-color 125px, transparent 125px);
+
+			&::before {
+				left: 50%;
+				transform: translateX(-50%);
+				width: 198px;
+				height: 60px;
+				border-radius: 0 0 99px 99px/0 0 60px 60px;
+				bottom: 37px;
+				background: $hair-color;
+			}
+		}
+		.fringe {
+			margin-left: -50%;
+			top: -10px;
+			transform: translateX(-20px) rotate(-25deg);
+			border-radius: 50%;
+
+			&::before {
+				left: -1px;
+				border-color: $hair-color transparent transparent;
+				border-width: 60px 30px 0px 0px;
+			}
+
+			&::after {
+				right: -15px;
+				border-color: $hair-color transparent transparent;
+				border-width: 60px 20px 0px 30px;
+			}
+		}
+
+		.body {
+			background: $doll-1-color-2;
+		}
+
+		.arm {
+			top: 25px;
+			overflow: hidden;
+			background: $doll-1-color-2;
+			width: 55px;
+			height: 160px;
+			border-radius: 60px 0 0/165px 0 0;
+			box-shadow: inset 0 -10px 0 0 $doll-1-color-1;
+
+			&.left {
+				left: 5px;
+			}
+
+			&.right {
+				left: auto;
+				right: 5px;
+				transform: translateX(50%) scaleX(-1);
+			}
+		}
+
+		.robe {
+			border-top-color: $doll-1-color-1;
+			transform: translateX(-50%) translateX(5px) rotate(-45deg);
+
+			&::after {
+				border-top-color: inherit;
+				border-left-color: $doll-1-color-1;
+			}
+		}
+
+		.bow {
+			top: 40px;
+			border-color: transparent $doll-1-color-1 transparent transparent;
+			border-style: solid;
+			border-width: 20px 40px;
+
+			&::before,
+			&::after {
+				left: 50%;
+				top: 50%;
+			}
+
+			&::before {
+				transform: translate(-50%, -50%) translateX(30px);
+				border-color: transparent transparent transparent $doll-1-color-1;
+				border-style: solid;
+				border-width: 20px 40px;
+			}
+
+			&::after {
+				transform: translate(-50%, -50%) translateX(15px);
+				border-radius: 15px;
+				width: 15px;
+				height: 27px;
+				background: $doll-1-color-2;
+				box-shadow: 28px 0 0 7px $doll-1-color-1, -28px 0 0 7px $doll-1-color-1;
+			}
+		}
+
+		.flower {
+			@include flower-style((size: 15px, color: $doll-1-color-2));
+
+			$flowers: (40px 35px "scale(0.95) rotate(90deg)"),
+				 (80px 50px "scale(0.75) rotate(40deg)"),
+				 (115px 55px "scale(0.5) rotate(20deg)");
+
+			@each $flower in $flowers {
+				$i: index($flowers, $flower);
+				&:nth-child(#{$i}) {
+					top: #{nth($flower, 1)};
+					right: #{nth($flower, 2)};
+					transform: #{nth($flower, 3)};
+				}
+			}
+		}
+
+		@include petal-shape(10px, 18px, $doll-1-color-1, 6px);
+		@include petal-size();
+	}
+
+	&:nth-child(2) {
+		.hair {
+			background-image: radial-gradient(
+					circle at 7% 72%,
+					$doll-2-color-1 25px,
+					transparent 25px
+				),
+				radial-gradient(circle at 93% 72%, $doll-2-color-1 25px, transparent 25px);
+
+			&::before {
+				left: 50%;
+				transform: translateX(-50%);
+				width: 75px;
+				height: 75px;
+				border-radius: 50%;
+				bottom: -10px;
+				box-shadow: -80px 0 0 0 $hair-color, 80px 0 0 0 $hair-color;
+			}
+		}
+
+		.fringe {
+			width: 150px;
+			height: 70px;
+			border-radius: 75px 75px 0 0/70px 70px 0 0;
+			top: -30px;
+			box-shadow: 0 -12px 0 0 $doll-2-color-1, 0 -20px 0 -2px $doll-2-color-1;
+
+			&::before,
+			&::after {
+				border-color: transparent transparent $skin-color transparent;
+				bottom: 0;
+			}
+
+			&::before {
+				right: 25px;
+				border-width: 0 6px 22px 6px;
+			}
+
+			&::after {
+				right: 50px;
+				border-width: 0 6px 12px 6px;
+			}
+		}
+
+		.lips {
+			transform: translateX(-50%) scaleX(1.15) scaleY(0.95);
+		}
+
+		.body {
+			background: $doll-2-color-2;
+			background-image: linear-gradient(
+					to bottom,
+					$doll-2-color-3 110px,
+					transparent 110px
+				),
+				radial-gradient(
+					circle at 25px 143px,
+					$doll-2-color-3 50px,
+					$doll-2-color-1 45px,
+					$doll-2-color-1 65px,
+					transparent 65px
+				),
+				radial-gradient(
+					circle at 145px 143px,
+					$doll-2-color-3 50px,
+					$doll-2-color-1 45px,
+					$doll-2-color-1 65px,
+					transparent 65px
+				);
+		}
+
+		.robe {
+			width: 95px;
+			height: 120px;
+			border-radius: 0 0 50px 50px/0 0 120px 120px;
+			border: none;
+			background: $doll-2-color-2;
+			background-image: linear-gradient(
+					to top,
+					$doll-2-color-2 20px,
+					$doll-2-color-1 20px,
+					$doll-2-color-1 55px,
+					transparent 55px
+				),
+				linear-gradient(
+					-45deg,
+					$doll-2-color-2 70px,
+					$doll-2-color-1 70px,
+					$doll-2-color-1 75px,
+					$doll-2-color-2 75px,
+					$doll-2-color-2 80px,
+					$doll-2-color-1 80px,
+					$doll-2-color-1 90px,
+					transparent 90px
+				),
+				linear-gradient(
+					45deg,
+					transparent 70px,
+					$doll-2-color-1 70px,
+					$doll-2-color-1 75px,
+					transparent 75px,
+					transparent 80px,
+					$doll-2-color-1 80px,
+					$doll-2-color-1 90px,
+					transparent 90px
+				);
+			top: 10px;
+		}
+
+		.flower {
+			@include flower-style();
+
+			$flowers: (65px 145px 20deg),  (90px 130px 20deg),  (95px 155px 35deg),
+				 (120px 140px 25deg),  (130px 115px -25deg),  (140px 155px 20deg),
+				 (155px 120px 10deg),  (160px 140px 40deg),  (170px 160px 45deg),
+				 (55px 30px 20deg),  (80px 20px -40deg),  (105px 35px -35deg),
+				 (125px 15px -15deg),  (145px 35px 15deg),  (135px 60px -10deg),
+				 (165px 15px -35deg),  (170px 45px 10deg);
+
+			@each $flower in $flowers {
+				$i: index($flowers, $flower);
+				&:nth-child(#{$i}) {
+					top: nth($flower, 1);
+					left: nth($flower, 2);
+					transform: rotate(nth($flower, 3));
+				}
+			}
+		}
+
+		@include petal-shape(4px, 7px, $doll-2-color-1);
+		@include petal-size(5);
+	}
+
+	&:nth-child(3) {
+		.hair {
+			height: 220px;
+			background: linear-gradient(to bottom, $hair-color 125px, transparent 125px);
+
+			&::before {
+				left: 50%;
+				transform: translateX(-50%);
+				width: 198px;
+				height: 60px;
+				border-radius: 0 0 99px 99px/0 0 60px 60px;
+				bottom: 37px;
+				background: $hair-color;
+			}
+		}
+
+		.bun {
+			height: 100px;
+			width: 90px;
+		}
+
+		.fringe {
+			width: 150px;
+			height: 70px;
+			border-radius: 75px 75px 0 0/70px 70px 0 0;
+			top: -30px;
+
+			&::before,
+			&::after {
+				border-color: transparent transparent $skin-color transparent;
+				bottom: 0;
+			}
+
+			&::before {
+				right: 25px;
+				border-width: 0 6px 22px 6px;
+			}
+
+			&::after {
+				right: 50px;
+				border-width: 0 6px 12px 6px;
+			}
+		}
+
+		.pin {
+			width: 60px;
+
+			.flower {
+				top: 2px !important;
+				left: 13px !important;
+				transform: scale(0.75) rotate(5deg) !important;
+				@include flower-style((size: 11px, color: $doll-3-color-3));
+			}
+
+			@include petal-shape(8px, 12px, $doll-3-color-1, 3px);
+			@include petal-size();
+
+			&.left {
+				transform: translateX(-100%) translateX(-20px) rotate(20deg);
+			}
+
+			&.right {
+				transform: translateX(-100%) translateX(25px) rotate(175deg);
+			}
+		}
+
+		.face {
+			bottom: 25px;
+		}
+
+		.lips {
+			bottom: 10px;
+			transform: translateX(-50%) scaleX(1.15) scaleY(1.25);
+			background-image: radial-gradient(
+				circle at 50% -20px,
+				$skin-color 21px,
+				transparent 22px
+			);
+
+			&::before {
+				display: none;
+			}
+		}
+
+		.body {
+			background: linear-gradient(
+				to right,
+				$doll-3-color-1 35%,
+				$doll-3-color-2 35%,
+				$doll-3-color-2 45%,
+				$doll-3-color-3 45%,
+				$doll-3-color-3 55%,
+				$doll-3-color-2 55%,
+				$doll-3-color-2 65%,
+				$doll-3-color-1 65%
+			);
+		}
+
+		.robe {
+			width: 95px;
+			height: 120px;
+			border-radius: 0 0 50px 50px/0 0 120px 120px;
+			border: none;
+			background: $doll-3-color-2;
+			background-image: linear-gradient(
+					to top,
+					$doll-3-color-4 48px,
+					transparent 48px
+				),
+				linear-gradient(
+					-45deg,
+					$doll-3-color-2 75px,
+					$doll-3-color-3 75px,
+					$doll-3-color-3 95px,
+					transparent 95px
+				),
+				linear-gradient(
+					45deg,
+					transparent 70px,
+					$doll-3-color-3 70px,
+					$doll-3-color-3 90px,
+					transparent 90px
+				);
+			top: 10px;
+		}
+
+		.flower {
+			@include flower-style((size: 11px, color: $doll-3-color-1));
+
+			$flowers: (65px 25px "scale(0.85) rotate(10deg)"),
+				 (110px 25px "scale(1.35) rotate(20deg)"),
+				 (145px 40px "scale(0.85) rotate(15deg)"),
+				 (180px 30px "scale(1.25) rotate(10deg)"),
+				 (75px 145px "scale(0.85) rotate(35deg)"),
+				 (115px 140px "scale(1.35) rotate(30deg)"),
+				 (150px 155px "scale(0.65) rotate(15deg)"),
+				 (180px 135px "scale(1.25) rotate(30deg)");
+
+			@each $flower in $flowers {
+				$i: index($flowers, $flower);
+				&:nth-child(#{$i}) {
+					top: #{nth($flower, 1)};
+					left: #{nth($flower, 2)};
+					transform: #{nth($flower, 3)};
+				}
+			}
+		}
+
+		@include petal-shape(8px, 12px, $doll-3-color-4, 3px);
+		@include petal-size();
+	}
+
+	&:nth-child(4) {
+		.hair {
+			width: 210px;
+			height: 290px;
+			border-radius: 55% 55% 50% 50%/45% 45% 60% 60%;
+			background: linear-gradient(to bottom, $hair-color 225px, transparent 125px);
+		}
+
+		.fringe {
+			height: 50px;
+			top: -10px;
+			margin-left: -50%;
+			border-radius: 50%;
+			transform: translateX(20px) rotate(15deg);
+
+			&::before {
+				width: 30px;
+				height: 70px;
+				background: inherit;
+				border-radius: 50%;
+				transform: rotate(15deg);
+				top: 25px;
+				left: -20px;
+			}
+		}
+
+		.flower {
+			z-index: 3;
+			@include flower-style((size: 11px, color: radial-gradient(circle, $white-color 5px, $doll-4-color-1 5px)));
+
+			$flowers: (-25px 50px rotate(35deg)),
+				 (15px 30px "scale(1.65) rotate(-5deg)");
+
+			@each $flower in $flowers {
+				$i: index($flowers, $flower);
+				&:nth-child(#{$i}) {
+					top: #{nth($flower, 1)};
+					left: #{nth($flower, 2)};
+					transform: #{nth($flower, 3)};
+				}
+			}
+		}
+
+		@include petal-shape(8px, 12px, $doll-4-color-1, 4px);
+		@include petal-size();
+
+		.face {
+			bottom: 25px;
+		}
+
+		.lips {
+			transform: translateX(-50%) scaleX(1.15) scaleY(0.95);
+		}
+
+		.body {
+			background: $doll-4-color-1;
+			background-image: linear-gradient(
+					to bottom,
+					$doll-4-color-2 110px,
+					transparent 110px
+				),
+				radial-gradient(
+					circle at 25px 143px,
+					$doll-4-color-2 50px,
+					$doll-4-color-3 50px,
+					$doll-4-color-3 65px,
+					transparent 65px
+				),
+				radial-gradient(
+					circle at 145px 143px,
+					$doll-4-color-2 50px,
+					$doll-4-color-3 50px,
+					$doll-4-color-3 65px,
+					transparent 65px
+				),
+				linear-gradient(to top, $doll-4-color-2 80px, transparent 80px);
+		}
+
+		.robe {
+			width: 95px;
+			height: 120px;
+			border-radius: 0 0 50px 50px/0 0 120px 120px;
+			border: none;
+			background: $doll-4-color-1;
+			background-image: linear-gradient(
+					-45deg,
+					$doll-4-color-1 59px,
+					$doll-4-color-3 59px,
+					$doll-4-color-3 67px,
+					$doll-4-color-1 67px,
+					$doll-4-color-1 75px,
+					$doll-4-color-3 75px,
+					$doll-4-color-3 95px,
+					transparent 95px
+				),
+				linear-gradient(
+					45deg,
+					transparent 70px,
+					$doll-4-color-3 70px,
+					$doll-4-color-3 90px,
+					transparent 90px
+				);
+			top: 10px;
+		}
+	}
+
+	&:nth-child(5) {
+		.pin {
+			width: 190px;
+			top: 8px;
+			transform: translateX(-55%);
+
+			&::before {
+				background: $doll-5-color-2;
+				background-image: radial-gradient(
+					circle at 25% 45%,
+					$doll-5-color-3 6px,
+					transparent 7px
+				);
+			}
+		}
+
+		.bun {
+			width: 125px;
+			height: 55px;
+			border-radius: 30px;
+			top: 20px;
+			z-index: 2;
+		}
+
+		.hair {
+			width: 220px;
+			height: 220px;
+			background: linear-gradient(to bottom, $hair-color 120px, transparent 120px);
+
+			&::before {
+				left: 50%;
+				transform: translateX(-50%);
+				width: 220px;
+				height: 70px;
+				border-radius: 0 0 110px 110px/0 0 95px 95px;
+				bottom: 38px;
+				background: $hair-color;
+			}
+		}
+
+		.fringe {
+			top: -15px;
+
+			&::before {
+				left: -20px;
+				border-color: transparent $hair-color transparent transparent;
+				border-width: 45px 35px 50px 0px;
+			}
+
+			&::after {
+				right: -20px;
+				border-color: transparent transparent transparent $hair-color;
+				border-width: 45px 0px 50px 35px;
+			}
+		}
+
+		.face {
+			bottom: 40px;
+		}
+
+		.body {
+			background: $doll-5-color-1;
+		}
+
+		.robe {
+			border-top-color: $doll-5-color-2;
+			width: 135px;
+			transform: translateX(-50%) translateX(5px) rotate(-45deg);
+
+			&::after {
+				border-top: 0;
+				border-left-color: $doll-5-color-2;
+			}
+		}
+
+		.arm {
+			background: $doll-5-color-1;
+			border-radius: 0 0 60px 60px/ 0 0 15px 15px;
+			height: 155px;
+			width: 70px;
+			top: 20px;
+
+			&.left {
+				transform-origin: 0% 0%;
+				transform: rotate(30deg);
+				left: 30px;
+			}
+
+			&.right {
+				transform-origin: 100% 0%;
+				transform: rotate(-30deg);
+				right: 30px;
+				left: auto;
+			}
+		}
+
+		.belt {
+			z-index: 2;
+			width: 125px;
+			height: 50px;
+			top: 65px;
+			border: 10px solid transparent;
+			border-bottom: 50px solid $doll-5-color-2;
+		}
+
+		.flower {
+			z-index: 1;
+			@include flower-style((size: 9px, color: $doll-5-color-3));
+
+			$flowers: (65px 40px "scale(1.35)"),  (100px 5px "scale(0.75)"),
+				 (150px 0px "scale(1.35)"),  (185px 30px "scale(0.75)"),
+				 (145px 85px "scale(1.35)"),  (185px 130px "scale(0.75)"),
+				 (130px 150px "scale(1.35)"),  (145px 195px "scale(0.8)"),
+				 (85px 160px "scale(0.8)"),  (70px 95px "scale(0.85)"),
+				 (50px 130px "scale(1.15)");
+
+			@each $flower in $flowers {
+				$i: index($flowers, $flower);
+				&:nth-child(#{$i}) {
+					top: #{nth($flower, 1)};
+					left: #{nth($flower, 2)};
+					transform: #{nth($flower, 3)};
+				}
+			}
+		}
+
+		@include petal-shape(6px, 16px, $doll-5-color-3, 3px);
+		@include petal-size(8);
+	}
+
+	&:nth-child(6) {
+		.bun {
+			top: 15px;
+			width: 90px;
+			height: 90px;
+
+			&.left {
+				background-image: linear-gradient(
+					-45deg,
+					$doll-6-color-1 65px,
+					transparent 65px
+				);
+				margin-left: -80px;
+			}
+
+			&.right {
+				background-image: linear-gradient(
+					45deg,
+					$doll-6-color-1 65px,
+					transparent 65px
+				);
+				margin-left: 80px;
+			}
+		}
+
+		.hair {
+			width: 210px;
+			height: 220px;
+			background: linear-gradient(to bottom, $hair-color 175px, transparent 125px);
+		}
+
+		.fringe {
+			width: 150px;
+			height: 70px;
+			top: -25px;
+		}
+
+		.lips {
+			transform: translateX(-50%) scaleX(1.15) scaleY(1.25);
+
+			&::before {
+				display: none;
+			}
+		}
+
+		.body {
+			background: $doll-6-color-2;
+			background-image: linear-gradient(
+				to bottom,
+				transparent 90px,
+				$doll-6-color-3 90px,
+				$doll-6-color-3 140px,
+				transparent 140px
+			);
+			border-style: solid;
+			border-width: 2px 20px;
+			border-color: transparent $doll-6-color-1;
+			overflow: hidden;
+		}
+
+		.robe {
+			border-top-color: $doll-6-color-3;
+			transform: translateX(-50%) rotate(-45deg);
+
+			&::before {
+				left: 40%;
+			}
+		}
+
+		.flower {
+			z-index: 3;
+			@include flower-style((size: 8px, color: radial-gradient(circle, $doll-6-color-3 2px, $doll-6-color-2 3px)));
+
+			@for $i from -1 through 1 {
+				&:nth-child(#{$i + 2}) {
+					top: 115px;
+					left: 50%;
+					transform: translateX(#{$i * 42}px) scale(1.25) rotate(-10deg);
+				}
+			}
+		}
+
+		@include petal-shape(8px, 13px, $doll-6-color-2, 3px);
+		@include petal-size();
+
+		.belt {
+			background-image: radial-gradient(
+					ellipse 10px 65px at -2px 50%,
+					transparent 4px,
+					$doll-6-color-4 5px,
+					$doll-6-color-4 15px,
+					transparent 20px
+				),
+				radial-gradient(
+					ellipse 10px 65px at 202px 50%,
+					transparent 4px,
+					$doll-6-color-4 5px,
+					$doll-6-color-4 15px,
+					transparent 25px
+				),
+				linear-gradient(
+					to left,
+					transparent 10px,
+					$doll-6-color-4 10px,
+					$doll-6-color-4 190px,
+					transparent 190px
+				);
+			width: 200px;
+			height: 100px;
+			border-radius: 20px;
+			z-index: -1;
+			bottom: 40px;
+		}
+	}
+
+	&:hover {
+		.blush {
+			opacity: 0.95;
+			transition: opacity 0.5s ease-in-out 0.5s;
+		}
+
+		.head,
+		.hair,
+		.face {
+			animation: head-shake 0.15s ease-in-out alternate infinite;
+		}
+
+		.bun,
+		.bow {
+			animation: head-shake-2 0.15s ease-in-out alternate infinite;
+		}
+	}
+}
+
+@keyframes head-shake {
+	from {
+		transform: translateX(-50%) translateY(0);
+	}
+	to {
+		transform: translateX(-50%) translateY(10px);
+	}
+}
+
+@keyframes head-shake-2 {
+	from {
+		transform: translateX(-50%) translateY(0);
+	}
+	to {
+		transform: translateX(-50%) translateY(20px);
+	}
+}
+
+body {
+  display: flex;
+  align-items: center;
+  height: 100vh;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.doll {
+  width: 270px;
+  height: 420px;
+  margin: 20px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.doll .head, .doll .body, .doll .hair, .doll .pin, .doll .face, .doll .bun, .doll .fringe, .doll .eyes, .doll .blush, .doll .lips, .doll .bow, .doll .arm, .doll .robe, .doll .belt {
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+}
+.doll .head::before, .doll .head::after, .doll .body::before, .doll .body::after, .doll .hair::before, .doll .hair::after, .doll .pin::before, .doll .pin::after, .doll .face::before, .doll .face::after, .doll .bun::before, .doll .bun::after, .doll .fringe::before, .doll .fringe::after, .doll .eyes::before, .doll .eyes::after, .doll .blush::before, .doll .blush::after, .doll .lips::before, .doll .lips::after, .doll .bow::before, .doll .bow::after, .doll .arm::before, .doll .arm::after, .doll .robe::before, .doll .robe::after, .doll .belt::before, .doll .belt::after {
+  position: absolute;
+  content: '';
+}
+.doll .head {
+  top: 120px;
+  height: 120px;
+  width: 150px;
+  background: #FFDCC0;
+  border-radius: 50%;
+  z-index: 2;
+}
+.doll .hair {
+  top: 50px;
+  background: #292929;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+}
+.doll .bun {
+  z-index: -1;
+  background: #292929;
+  top: 0;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+.doll .pin {
+  top: 40px;
+  height: 8px;
+  border-radius: 4px;
+  background: #A1D6FF;
+  -webkit-transform-origin: 100% 50%;
+          transform-origin: 100% 50%;
+}
+.doll .pin::before {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  left: 0;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  background: #C1EA82;
+}
+.doll .fringe {
+  background: #292929;
+  width: 150px;
+  height: 40px;
+}
+.doll .fringe::before, .doll .fringe::after {
+  top: 20px;
+  border-style: solid;
+  border-color: transparent;
+}
+.doll .face {
+  bottom: 15px;
+  height: 45px;
+  width: 105px;
+}
+.doll .eyes {
+  top: 10px;
+}
+.doll .eyes::after, .doll .eyes::before {
+  top: 0;
+  width: 28px;
+  height: 15px;
+  border-radius: 50%;
+  background: #FFDCC0;
+  box-shadow: 0 -6px 0 0 #292929, 0 -9px 0 -2px #292929, 0 -11px 0 -4px #292929;
+  left: 50%;
+  margin-left: -15px;
+}
+.doll .eyes::before {
+  -webkit-transform: translateX(-28px);
+          transform: translateX(-28px);
+}
+.doll .eyes::after {
+  -webkit-transform: translateX(28px);
+          transform: translateX(28px);
+}
+.doll .blush {
+  bottom: 5px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  opacity: 0.35;
+  box-shadow: -40px 0 0 0 #FC8D8E, 40px 0 0 0 #FC8D8E;
+  transition: opacity 2.5s ease-in-out 1.5s;
+}
+.doll .lips {
+  bottom: 5px;
+  width: 18px;
+  height: 6px;
+  border-radius: 0 0 9px 9px/ 0 0 6px 6px;
+  background: #C74647;
+}
+.doll .lips::before {
+  top: -8px;
+  border-color: transparent transparent #C74647 transparent;
+  border-style: solid;
+  border-width: 4px 7px;
+  width: 18px;
+}
+.doll .body {
+  bottom: -65px;
+  width: 170px;
+  height: 270px;
+  z-index: 1;
+  border-radius: 50% 50% 50% 50%/70% 70% 60% 60%;
+}
+.doll .robe {
+  z-index: 2;
+  border: 5px solid transparent;
+  border-top-width: 20px;
+  border-bottom: 0;
+  width: 130px;
+  top: 50px;
+}
+.doll .robe::before {
+  border: 5px solid transparent;
+  border-top-width: 20px;
+  border-top-color: inherit;
+  width: 75px;
+  left: 45%;
+  -webkit-transform: translateX(-50%) translateY(-60px) rotate(90deg);
+          transform: translateX(-50%) translateY(-60px) rotate(90deg);
+}
+.doll .robe::after {
+  border-top: 30px solid transparent;
+  border-left: 20px solid transparent;
+  width: 100px;
+  height: 120px;
+  -webkit-transform-origin: 0 0;
+          transform-origin: 0 0;
+  -webkit-transform: translateX(-5px) translateY(-20px) rotate(45deg);
+          transform: translateX(-5px) translateY(-20px) rotate(45deg);
+}
+.doll:nth-child(1) .hair {
+  height: 220px;
+  background: linear-gradient(to bottom, #292929 125px, transparent 125px);
+}
+.doll:nth-child(1) .hair::before {
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  width: 198px;
+  height: 60px;
+  border-radius: 0 0 99px 99px/0 0 60px 60px;
+  bottom: 37px;
+  background: #292929;
+}
+.doll:nth-child(1) .fringe {
+  margin-left: -50%;
+  top: -10px;
+  -webkit-transform: translateX(-20px) rotate(-25deg);
+          transform: translateX(-20px) rotate(-25deg);
+  border-radius: 50%;
+}
+.doll:nth-child(1) .fringe::before {
+  left: -1px;
+  border-color: #292929 transparent transparent;
+  border-width: 60px 30px 0px 0px;
+}
+.doll:nth-child(1) .fringe::after {
+  right: -15px;
+  border-color: #292929 transparent transparent;
+  border-width: 60px 20px 0px 30px;
+}
+.doll:nth-child(1) .body {
+  background: #9BD4FF;
+}
+.doll:nth-child(1) .arm {
+  top: 25px;
+  overflow: hidden;
+  background: #9BD4FF;
+  width: 55px;
+  height: 160px;
+  border-radius: 60px 0 0/165px 0 0;
+  box-shadow: inset 0 -10px 0 0 #059BFA;
+}
+.doll:nth-child(1) .arm.left {
+  left: 5px;
+}
+.doll:nth-child(1) .arm.right {
+  left: auto;
+  right: 5px;
+  -webkit-transform: translateX(50%) scaleX(-1);
+          transform: translateX(50%) scaleX(-1);
+}
+.doll:nth-child(1) .robe {
+  border-top-color: #059BFA;
+  -webkit-transform: translateX(-50%) translateX(5px) rotate(-45deg);
+          transform: translateX(-50%) translateX(5px) rotate(-45deg);
+}
+.doll:nth-child(1) .robe::after {
+  border-top-color: inherit;
+  border-left-color: #059BFA;
+}
+.doll:nth-child(1) .bow {
+  top: 40px;
+  border-color: transparent #059BFA transparent transparent;
+  border-style: solid;
+  border-width: 20px 40px;
+}
+.doll:nth-child(1) .bow::before, .doll:nth-child(1) .bow::after {
+  left: 50%;
+  top: 50%;
+}
+.doll:nth-child(1) .bow::before {
+  -webkit-transform: translate(-50%, -50%) translateX(30px);
+          transform: translate(-50%, -50%) translateX(30px);
+  border-color: transparent transparent transparent #059BFA;
+  border-style: solid;
+  border-width: 20px 40px;
+}
+.doll:nth-child(1) .bow::after {
+  -webkit-transform: translate(-50%, -50%) translateX(15px);
+          transform: translate(-50%, -50%) translateX(15px);
+  border-radius: 15px;
+  width: 15px;
+  height: 27px;
+  background: #9BD4FF;
+  box-shadow: 28px 0 0 7px #059BFA, -28px 0 0 7px #059BFA;
+}
+.doll:nth-child(1) .flower {
+  position: absolute;
+}
+.doll:nth-child(1) .flower::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  width: 15px;
+  height: 15px;
+  background: #9BD4FF;
+}
+.doll:nth-child(1) .flower:nth-child(1) {
+  top: 40px;
+  right: 35px;
+  -webkit-transform: scale(0.95) rotate(90deg);
+          transform: scale(0.95) rotate(90deg);
+}
+.doll:nth-child(1) .flower:nth-child(2) {
+  top: 80px;
+  right: 50px;
+  -webkit-transform: scale(0.75) rotate(40deg);
+          transform: scale(0.75) rotate(40deg);
+}
+.doll:nth-child(1) .flower:nth-child(3) {
+  top: 115px;
+  right: 55px;
+  -webkit-transform: scale(0.5) rotate(20deg);
+          transform: scale(0.5) rotate(20deg);
+}
+.doll:nth-child(1) .petal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  width: 10px;
+  height: 18px;
+  margin-left: -5px;
+  margin-top: -24px;
+  -webkit-transform-origin: 50% 24px;
+          transform-origin: 50% 24px;
+  background: #059BFA;
+}
+.doll:nth-child(1) .petal-6:nth-child(1) {
+  -webkit-transform: rotate(0deg);
+          transform: rotate(0deg);
+}
+.doll:nth-child(1) .petal-6:nth-child(2) {
+  -webkit-transform: rotate(60deg);
+          transform: rotate(60deg);
+}
+.doll:nth-child(1) .petal-6:nth-child(3) {
+  -webkit-transform: rotate(120deg);
+          transform: rotate(120deg);
+}
+.doll:nth-child(1) .petal-6:nth-child(4) {
+  -webkit-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+.doll:nth-child(1) .petal-6:nth-child(5) {
+  -webkit-transform: rotate(240deg);
+          transform: rotate(240deg);
+}
+.doll:nth-child(1) .petal-6:nth-child(6) {
+  -webkit-transform: rotate(300deg);
+          transform: rotate(300deg);
+}
+.doll:nth-child(2) .hair {
+  background-image: radial-gradient(circle at 7% 72%, #FACC3C 25px, transparent 25px), radial-gradient(circle at 93% 72%, #FACC3C 25px, transparent 25px);
+}
+.doll:nth-child(2) .hair::before {
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  bottom: -10px;
+  box-shadow: -80px 0 0 0 #292929, 80px 0 0 0 #292929;
+}
+.doll:nth-child(2) .fringe {
+  width: 150px;
+  height: 70px;
+  border-radius: 75px 75px 0 0/70px 70px 0 0;
+  top: -30px;
+  box-shadow: 0 -12px 0 0 #FACC3C, 0 -20px 0 -2px #FACC3C;
+}
+.doll:nth-child(2) .fringe::before, .doll:nth-child(2) .fringe::after {
+  border-color: transparent transparent #FFDCC0 transparent;
+  bottom: 0;
+}
+.doll:nth-child(2) .fringe::before {
+  right: 25px;
+  border-width: 0 6px 22px 6px;
+}
+.doll:nth-child(2) .fringe::after {
+  right: 50px;
+  border-width: 0 6px 12px 6px;
+}
+.doll:nth-child(2) .lips {
+  -webkit-transform: translateX(-50%) scaleX(1.15) scaleY(0.95);
+          transform: translateX(-50%) scaleX(1.15) scaleY(0.95);
+}
+.doll:nth-child(2) .body {
+  background: #D9461C;
+  background-image: linear-gradient(to bottom, #FF633A 110px, transparent 110px), radial-gradient(circle at 25px 143px, #FF633A 50px, #FACC3C 45px, #FACC3C 65px, transparent 65px), radial-gradient(circle at 145px 143px, #FF633A 50px, #FACC3C 45px, #FACC3C 65px, transparent 65px);
+}
+.doll:nth-child(2) .robe {
+  width: 95px;
+  height: 120px;
+  border-radius: 0 0 50px 50px/0 0 120px 120px;
+  border: none;
+  background: #D9461C;
+  background-image: linear-gradient(to top, #D9461C 20px, #FACC3C 20px, #FACC3C 55px, transparent 55px), linear-gradient(-45deg, #D9461C 70px, #FACC3C 70px, #FACC3C 75px, #D9461C 75px, #D9461C 80px, #FACC3C 80px, #FACC3C 90px, transparent 90px), linear-gradient(45deg, transparent 70px, #FACC3C 70px, #FACC3C 75px, transparent 75px, transparent 80px, #FACC3C 80px, #FACC3C 90px, transparent 90px);
+  top: 10px;
+}
+.doll:nth-child(2) .flower {
+  position: absolute;
+}
+.doll:nth-child(2) .flower:nth-child(1) {
+  top: 65px;
+  left: 145px;
+  -webkit-transform: rotate(20deg);
+          transform: rotate(20deg);
+}
+.doll:nth-child(2) .flower:nth-child(2) {
+  top: 90px;
+  left: 130px;
+  -webkit-transform: rotate(20deg);
+          transform: rotate(20deg);
+}
+.doll:nth-child(2) .flower:nth-child(3) {
+  top: 95px;
+  left: 155px;
+  -webkit-transform: rotate(35deg);
+          transform: rotate(35deg);
+}
+.doll:nth-child(2) .flower:nth-child(4) {
+  top: 120px;
+  left: 140px;
+  -webkit-transform: rotate(25deg);
+          transform: rotate(25deg);
+}
+.doll:nth-child(2) .flower:nth-child(5) {
+  top: 130px;
+  left: 115px;
+  -webkit-transform: rotate(-25deg);
+          transform: rotate(-25deg);
+}
+.doll:nth-child(2) .flower:nth-child(6) {
+  top: 140px;
+  left: 155px;
+  -webkit-transform: rotate(20deg);
+          transform: rotate(20deg);
+}
+.doll:nth-child(2) .flower:nth-child(7) {
+  top: 155px;
+  left: 120px;
+  -webkit-transform: rotate(10deg);
+          transform: rotate(10deg);
+}
+.doll:nth-child(2) .flower:nth-child(8) {
+  top: 160px;
+  left: 140px;
+  -webkit-transform: rotate(40deg);
+          transform: rotate(40deg);
+}
+.doll:nth-child(2) .flower:nth-child(9) {
+  top: 170px;
+  left: 160px;
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+.doll:nth-child(2) .flower:nth-child(10) {
+  top: 55px;
+  left: 30px;
+  -webkit-transform: rotate(20deg);
+          transform: rotate(20deg);
+}
+.doll:nth-child(2) .flower:nth-child(11) {
+  top: 80px;
+  left: 20px;
+  -webkit-transform: rotate(-40deg);
+          transform: rotate(-40deg);
+}
+.doll:nth-child(2) .flower:nth-child(12) {
+  top: 105px;
+  left: 35px;
+  -webkit-transform: rotate(-35deg);
+          transform: rotate(-35deg);
+}
+.doll:nth-child(2) .flower:nth-child(13) {
+  top: 125px;
+  left: 15px;
+  -webkit-transform: rotate(-15deg);
+          transform: rotate(-15deg);
+}
+.doll:nth-child(2) .flower:nth-child(14) {
+  top: 145px;
+  left: 35px;
+  -webkit-transform: rotate(15deg);
+          transform: rotate(15deg);
+}
+.doll:nth-child(2) .flower:nth-child(15) {
+  top: 135px;
+  left: 60px;
+  -webkit-transform: rotate(-10deg);
+          transform: rotate(-10deg);
+}
+.doll:nth-child(2) .flower:nth-child(16) {
+  top: 165px;
+  left: 15px;
+  -webkit-transform: rotate(-35deg);
+          transform: rotate(-35deg);
+}
+.doll:nth-child(2) .flower:nth-child(17) {
+  top: 170px;
+  left: 45px;
+  -webkit-transform: rotate(10deg);
+          transform: rotate(10deg);
+}
+.doll:nth-child(2) .petal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  width: 4px;
+  height: 7px;
+  margin-left: -2px;
+  margin-top: -7px;
+  -webkit-transform-origin: 50% 7px;
+          transform-origin: 50% 7px;
+  background: #FACC3C;
+}
+.doll:nth-child(2) .petal-5:nth-child(1) {
+  -webkit-transform: rotate(0deg);
+          transform: rotate(0deg);
+}
+.doll:nth-child(2) .petal-5:nth-child(2) {
+  -webkit-transform: rotate(72deg);
+          transform: rotate(72deg);
+}
+.doll:nth-child(2) .petal-5:nth-child(3) {
+  -webkit-transform: rotate(144deg);
+          transform: rotate(144deg);
+}
+.doll:nth-child(2) .petal-5:nth-child(4) {
+  -webkit-transform: rotate(216deg);
+          transform: rotate(216deg);
+}
+.doll:nth-child(2) .petal-5:nth-child(5) {
+  -webkit-transform: rotate(288deg);
+          transform: rotate(288deg);
+}
+.doll:nth-child(3) .hair {
+  height: 220px;
+  background: linear-gradient(to bottom, #292929 125px, transparent 125px);
+}
+.doll:nth-child(3) .hair::before {
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  width: 198px;
+  height: 60px;
+  border-radius: 0 0 99px 99px/0 0 60px 60px;
+  bottom: 37px;
+  background: #292929;
+}
+.doll:nth-child(3) .bun {
+  height: 100px;
+  width: 90px;
+}
+.doll:nth-child(3) .fringe {
+  width: 150px;
+  height: 70px;
+  border-radius: 75px 75px 0 0/70px 70px 0 0;
+  top: -30px;
+}
+.doll:nth-child(3) .fringe::before, .doll:nth-child(3) .fringe::after {
+  border-color: transparent transparent #FFDCC0 transparent;
+  bottom: 0;
+}
+.doll:nth-child(3) .fringe::before {
+  right: 25px;
+  border-width: 0 6px 22px 6px;
+}
+.doll:nth-child(3) .fringe::after {
+  right: 50px;
+  border-width: 0 6px 12px 6px;
+}
+.doll:nth-child(3) .pin {
+  width: 60px;
+}
+.doll:nth-child(3) .pin .flower {
+  top: 2px !important;
+  left: 13px !important;
+  -webkit-transform: scale(0.75) rotate(5deg) !important;
+          transform: scale(0.75) rotate(5deg) !important;
+  position: absolute;
+}
+.doll:nth-child(3) .pin .flower::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  width: 11px;
+  height: 11px;
+  background: #C1EA82;
+}
+.doll:nth-child(3) .pin .petal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  width: 8px;
+  height: 12px;
+  margin-left: -4px;
+  margin-top: -15px;
+  -webkit-transform-origin: 50% 15px;
+          transform-origin: 50% 15px;
+  background: #70B690;
+}
+.doll:nth-child(3) .pin .petal-6:nth-child(1) {
+  -webkit-transform: rotate(0deg);
+          transform: rotate(0deg);
+}
+.doll:nth-child(3) .pin .petal-6:nth-child(2) {
+  -webkit-transform: rotate(60deg);
+          transform: rotate(60deg);
+}
+.doll:nth-child(3) .pin .petal-6:nth-child(3) {
+  -webkit-transform: rotate(120deg);
+          transform: rotate(120deg);
+}
+.doll:nth-child(3) .pin .petal-6:nth-child(4) {
+  -webkit-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+.doll:nth-child(3) .pin .petal-6:nth-child(5) {
+  -webkit-transform: rotate(240deg);
+          transform: rotate(240deg);
+}
+.doll:nth-child(3) .pin .petal-6:nth-child(6) {
+  -webkit-transform: rotate(300deg);
+          transform: rotate(300deg);
+}
+.doll:nth-child(3) .pin.left {
+  -webkit-transform: translateX(-100%) translateX(-20px) rotate(20deg);
+          transform: translateX(-100%) translateX(-20px) rotate(20deg);
+}
+.doll:nth-child(3) .pin.right {
+  -webkit-transform: translateX(-100%) translateX(25px) rotate(175deg);
+          transform: translateX(-100%) translateX(25px) rotate(175deg);
+}
+.doll:nth-child(3) .face {
+  bottom: 25px;
+}
+.doll:nth-child(3) .lips {
+  bottom: 10px;
+  -webkit-transform: translateX(-50%) scaleX(1.15) scaleY(1.25);
+          transform: translateX(-50%) scaleX(1.15) scaleY(1.25);
+  background-image: radial-gradient(circle at 50% -20px, #FFDCC0 21px, transparent 22px);
+}
+.doll:nth-child(3) .lips::before {
+  display: none;
+}
+.doll:nth-child(3) .body {
+  background: linear-gradient(to right, #70B690 35%, #9ED79B 35%, #9ED79B 45%, #C1EA82 45%, #C1EA82 55%, #9ED79B 55%, #9ED79B 65%, #70B690 65%);
+}
+.doll:nth-child(3) .robe {
+  width: 95px;
+  height: 120px;
+  border-radius: 0 0 50px 50px/0 0 120px 120px;
+  border: none;
+  background: #9ED79B;
+  background-image: linear-gradient(to top, #377B78 48px, transparent 48px), linear-gradient(-45deg, #9ED79B 75px, #C1EA82 75px, #C1EA82 95px, transparent 95px), linear-gradient(45deg, transparent 70px, #C1EA82 70px, #C1EA82 90px, transparent 90px);
+  top: 10px;
+}
+.doll:nth-child(3) .flower {
+  position: absolute;
+}
+.doll:nth-child(3) .flower::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  width: 11px;
+  height: 11px;
+  background: #70B690;
+}
+.doll:nth-child(3) .flower:nth-child(1) {
+  top: 65px;
+  left: 25px;
+  -webkit-transform: scale(0.85) rotate(10deg);
+          transform: scale(0.85) rotate(10deg);
+}
+.doll:nth-child(3) .flower:nth-child(2) {
+  top: 110px;
+  left: 25px;
+  -webkit-transform: scale(1.35) rotate(20deg);
+          transform: scale(1.35) rotate(20deg);
+}
+.doll:nth-child(3) .flower:nth-child(3) {
+  top: 145px;
+  left: 40px;
+  -webkit-transform: scale(0.85) rotate(15deg);
+          transform: scale(0.85) rotate(15deg);
+}
+.doll:nth-child(3) .flower:nth-child(4) {
+  top: 180px;
+  left: 30px;
+  -webkit-transform: scale(1.25) rotate(10deg);
+          transform: scale(1.25) rotate(10deg);
+}
+.doll:nth-child(3) .flower:nth-child(5) {
+  top: 75px;
+  left: 145px;
+  -webkit-transform: scale(0.85) rotate(35deg);
+          transform: scale(0.85) rotate(35deg);
+}
+.doll:nth-child(3) .flower:nth-child(6) {
+  top: 115px;
+  left: 140px;
+  -webkit-transform: scale(1.35) rotate(30deg);
+          transform: scale(1.35) rotate(30deg);
+}
+.doll:nth-child(3) .flower:nth-child(7) {
+  top: 150px;
+  left: 155px;
+  -webkit-transform: scale(0.65) rotate(15deg);
+          transform: scale(0.65) rotate(15deg);
+}
+.doll:nth-child(3) .flower:nth-child(8) {
+  top: 180px;
+  left: 135px;
+  -webkit-transform: scale(1.25) rotate(30deg);
+          transform: scale(1.25) rotate(30deg);
+}
+.doll:nth-child(3) .petal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  width: 8px;
+  height: 12px;
+  margin-left: -4px;
+  margin-top: -15px;
+  -webkit-transform-origin: 50% 15px;
+          transform-origin: 50% 15px;
+  background: #377B78;
+}
+.doll:nth-child(3) .petal-6:nth-child(1) {
+  -webkit-transform: rotate(0deg);
+          transform: rotate(0deg);
+}
+.doll:nth-child(3) .petal-6:nth-child(2) {
+  -webkit-transform: rotate(60deg);
+          transform: rotate(60deg);
+}
+.doll:nth-child(3) .petal-6:nth-child(3) {
+  -webkit-transform: rotate(120deg);
+          transform: rotate(120deg);
+}
+.doll:nth-child(3) .petal-6:nth-child(4) {
+  -webkit-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+.doll:nth-child(3) .petal-6:nth-child(5) {
+  -webkit-transform: rotate(240deg);
+          transform: rotate(240deg);
+}
+.doll:nth-child(3) .petal-6:nth-child(6) {
+  -webkit-transform: rotate(300deg);
+          transform: rotate(300deg);
+}
+.doll:nth-child(4) .hair {
+  width: 210px;
+  height: 290px;
+  border-radius: 55% 55% 50% 50%/45% 45% 60% 60%;
+  background: linear-gradient(to bottom, #292929 225px, transparent 125px);
+}
+.doll:nth-child(4) .fringe {
+  height: 50px;
+  top: -10px;
+  margin-left: -50%;
+  border-radius: 50%;
+  -webkit-transform: translateX(20px) rotate(15deg);
+          transform: translateX(20px) rotate(15deg);
+}
+.doll:nth-child(4) .fringe::before {
+  width: 30px;
+  height: 70px;
+  background: inherit;
+  border-radius: 50%;
+  -webkit-transform: rotate(15deg);
+          transform: rotate(15deg);
+  top: 25px;
+  left: -20px;
+}
+.doll:nth-child(4) .flower {
+  z-index: 3;
+  position: absolute;
+}
+.doll:nth-child(4) .flower::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  width: 11px;
+  height: 11px;
+  background: radial-gradient(circle, #FFFFFF 5px, #FF95A0 5px);
+}
+.doll:nth-child(4) .flower:nth-child(1) {
+  top: -25px;
+  left: 50px;
+  -webkit-transform: rotate(35deg);
+          transform: rotate(35deg);
+}
+.doll:nth-child(4) .flower:nth-child(2) {
+  top: 15px;
+  left: 30px;
+  -webkit-transform: scale(1.65) rotate(-5deg);
+          transform: scale(1.65) rotate(-5deg);
+}
+.doll:nth-child(4) .petal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  width: 8px;
+  height: 12px;
+  margin-left: -4px;
+  margin-top: -16px;
+  -webkit-transform-origin: 50% 16px;
+          transform-origin: 50% 16px;
+  background: #FF95A0;
+}
+.doll:nth-child(4) .petal-6:nth-child(1) {
+  -webkit-transform: rotate(0deg);
+          transform: rotate(0deg);
+}
+.doll:nth-child(4) .petal-6:nth-child(2) {
+  -webkit-transform: rotate(60deg);
+          transform: rotate(60deg);
+}
+.doll:nth-child(4) .petal-6:nth-child(3) {
+  -webkit-transform: rotate(120deg);
+          transform: rotate(120deg);
+}
+.doll:nth-child(4) .petal-6:nth-child(4) {
+  -webkit-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+.doll:nth-child(4) .petal-6:nth-child(5) {
+  -webkit-transform: rotate(240deg);
+          transform: rotate(240deg);
+}
+.doll:nth-child(4) .petal-6:nth-child(6) {
+  -webkit-transform: rotate(300deg);
+          transform: rotate(300deg);
+}
+.doll:nth-child(4) .face {
+  bottom: 25px;
+}
+.doll:nth-child(4) .lips {
+  -webkit-transform: translateX(-50%) scaleX(1.15) scaleY(0.95);
+          transform: translateX(-50%) scaleX(1.15) scaleY(0.95);
+}
+.doll:nth-child(4) .body {
+  background: #FF95A0;
+  background-image: linear-gradient(to bottom, #CA2C47 110px, transparent 110px), radial-gradient(circle at 25px 143px, #CA2C47 50px, #881545 50px, #881545 65px, transparent 65px), radial-gradient(circle at 145px 143px, #CA2C47 50px, #881545 50px, #881545 65px, transparent 65px), linear-gradient(to top, #CA2C47 80px, transparent 80px);
+}
+.doll:nth-child(4) .robe {
+  width: 95px;
+  height: 120px;
+  border-radius: 0 0 50px 50px/0 0 120px 120px;
+  border: none;
+  background: #FF95A0;
+  background-image: linear-gradient(-45deg, #FF95A0 59px, #881545 59px, #881545 67px, #FF95A0 67px, #FF95A0 75px, #881545 75px, #881545 95px, transparent 95px), linear-gradient(45deg, transparent 70px, #881545 70px, #881545 90px, transparent 90px);
+  top: 10px;
+}
+.doll:nth-child(5) .pin {
+  width: 190px;
+  top: 8px;
+  -webkit-transform: translateX(-55%);
+          transform: translateX(-55%);
+}
+.doll:nth-child(5) .pin::before {
+  background: #65CB67;
+  background-image: radial-gradient(circle at 25% 45%, #EBE859 6px, transparent 7px);
+}
+.doll:nth-child(5) .bun {
+  width: 125px;
+  height: 55px;
+  border-radius: 30px;
+  top: 20px;
+  z-index: 2;
+}
+.doll:nth-child(5) .hair {
+  width: 220px;
+  height: 220px;
+  background: linear-gradient(to bottom, #292929 120px, transparent 120px);
+}
+.doll:nth-child(5) .hair::before {
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  width: 220px;
+  height: 70px;
+  border-radius: 0 0 110px 110px/0 0 95px 95px;
+  bottom: 38px;
+  background: #292929;
+}
+.doll:nth-child(5) .fringe {
+  top: -15px;
+}
+.doll:nth-child(5) .fringe::before {
+  left: -20px;
+  border-color: transparent #292929 transparent transparent;
+  border-width: 45px 35px 50px 0px;
+}
+.doll:nth-child(5) .fringe::after {
+  right: -20px;
+  border-color: transparent transparent transparent #292929;
+  border-width: 45px 0px 50px 35px;
+}
+.doll:nth-child(5) .face {
+  bottom: 40px;
+}
+.doll:nth-child(5) .body {
+  background: #2E7E3D;
+}
+.doll:nth-child(5) .robe {
+  border-top-color: #65CB67;
+  width: 135px;
+  -webkit-transform: translateX(-50%) translateX(5px) rotate(-45deg);
+          transform: translateX(-50%) translateX(5px) rotate(-45deg);
+}
+.doll:nth-child(5) .robe::after {
+  border-top: 0;
+  border-left-color: #65CB67;
+}
+.doll:nth-child(5) .arm {
+  background: #2E7E3D;
+  border-radius: 0 0 60px 60px/ 0 0 15px 15px;
+  height: 155px;
+  width: 70px;
+  top: 20px;
+}
+.doll:nth-child(5) .arm.left {
+  -webkit-transform-origin: 0% 0%;
+          transform-origin: 0% 0%;
+  -webkit-transform: rotate(30deg);
+          transform: rotate(30deg);
+  left: 30px;
+}
+.doll:nth-child(5) .arm.right {
+  -webkit-transform-origin: 100% 0%;
+          transform-origin: 100% 0%;
+  -webkit-transform: rotate(-30deg);
+          transform: rotate(-30deg);
+  right: 30px;
+  left: auto;
+}
+.doll:nth-child(5) .belt {
+  z-index: 2;
+  width: 125px;
+  height: 50px;
+  top: 65px;
+  border: 10px solid transparent;
+  border-bottom: 50px solid #65CB67;
+}
+.doll:nth-child(5) .flower {
+  z-index: 1;
+  position: absolute;
+}
+.doll:nth-child(5) .flower::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  width: 9px;
+  height: 9px;
+  background: #EBE859;
+}
+.doll:nth-child(5) .flower:nth-child(1) {
+  top: 65px;
+  left: 40px;
+  -webkit-transform: scale(1.35);
+          transform: scale(1.35);
+}
+.doll:nth-child(5) .flower:nth-child(2) {
+  top: 100px;
+  left: 5px;
+  -webkit-transform: scale(0.75);
+          transform: scale(0.75);
+}
+.doll:nth-child(5) .flower:nth-child(3) {
+  top: 150px;
+  left: 0px;
+  -webkit-transform: scale(1.35);
+          transform: scale(1.35);
+}
+.doll:nth-child(5) .flower:nth-child(4) {
+  top: 185px;
+  left: 30px;
+  -webkit-transform: scale(0.75);
+          transform: scale(0.75);
+}
+.doll:nth-child(5) .flower:nth-child(5) {
+  top: 145px;
+  left: 85px;
+  -webkit-transform: scale(1.35);
+          transform: scale(1.35);
+}
+.doll:nth-child(5) .flower:nth-child(6) {
+  top: 185px;
+  left: 130px;
+  -webkit-transform: scale(0.75);
+          transform: scale(0.75);
+}
+.doll:nth-child(5) .flower:nth-child(7) {
+  top: 130px;
+  left: 150px;
+  -webkit-transform: scale(1.35);
+          transform: scale(1.35);
+}
+.doll:nth-child(5) .flower:nth-child(8) {
+  top: 145px;
+  left: 195px;
+  -webkit-transform: scale(0.8);
+          transform: scale(0.8);
+}
+.doll:nth-child(5) .flower:nth-child(9) {
+  top: 85px;
+  left: 160px;
+  -webkit-transform: scale(0.8);
+          transform: scale(0.8);
+}
+.doll:nth-child(5) .flower:nth-child(10) {
+  top: 70px;
+  left: 95px;
+  -webkit-transform: scale(0.85);
+          transform: scale(0.85);
+}
+.doll:nth-child(5) .flower:nth-child(11) {
+  top: 50px;
+  left: 130px;
+  -webkit-transform: scale(1.15);
+          transform: scale(1.15);
+}
+.doll:nth-child(5) .petal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  width: 6px;
+  height: 16px;
+  margin-left: -3px;
+  margin-top: -19px;
+  -webkit-transform-origin: 50% 19px;
+          transform-origin: 50% 19px;
+  background: #EBE859;
+}
+.doll:nth-child(5) .petal-8:nth-child(1) {
+  -webkit-transform: rotate(0deg);
+          transform: rotate(0deg);
+}
+.doll:nth-child(5) .petal-8:nth-child(2) {
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+.doll:nth-child(5) .petal-8:nth-child(3) {
+  -webkit-transform: rotate(90deg);
+          transform: rotate(90deg);
+}
+.doll:nth-child(5) .petal-8:nth-child(4) {
+  -webkit-transform: rotate(135deg);
+          transform: rotate(135deg);
+}
+.doll:nth-child(5) .petal-8:nth-child(5) {
+  -webkit-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+.doll:nth-child(5) .petal-8:nth-child(6) {
+  -webkit-transform: rotate(225deg);
+          transform: rotate(225deg);
+}
+.doll:nth-child(5) .petal-8:nth-child(7) {
+  -webkit-transform: rotate(270deg);
+          transform: rotate(270deg);
+}
+.doll:nth-child(5) .petal-8:nth-child(8) {
+  -webkit-transform: rotate(315deg);
+          transform: rotate(315deg);
+}
+.doll:nth-child(6) .bun {
+  top: 15px;
+  width: 90px;
+  height: 90px;
+}
+.doll:nth-child(6) .bun.left {
+  background-image: linear-gradient(-45deg, #C01B1E 65px, transparent 65px);
+  margin-left: -80px;
+}
+.doll:nth-child(6) .bun.right {
+  background-image: linear-gradient(45deg, #C01B1E 65px, transparent 65px);
+  margin-left: 80px;
+}
+.doll:nth-child(6) .hair {
+  width: 210px;
+  height: 220px;
+  background: linear-gradient(to bottom, #292929 175px, transparent 125px);
+}
+.doll:nth-child(6) .fringe {
+  width: 150px;
+  height: 70px;
+  top: -25px;
+}
+.doll:nth-child(6) .lips {
+  -webkit-transform: translateX(-50%) scaleX(1.15) scaleY(1.25);
+          transform: translateX(-50%) scaleX(1.15) scaleY(1.25);
+}
+.doll:nth-child(6) .lips::before {
+  display: none;
+}
+.doll:nth-child(6) .body {
+  background: #FCB738;
+  background-image: linear-gradient(to bottom, transparent 90px, #D32F2E 90px, #D32F2E 140px, transparent 140px);
+  border-style: solid;
+  border-width: 2px 20px;
+  border-color: transparent #C01B1E;
+  overflow: hidden;
+}
+.doll:nth-child(6) .robe {
+  border-top-color: #D32F2E;
+  -webkit-transform: translateX(-50%) rotate(-45deg);
+          transform: translateX(-50%) rotate(-45deg);
+}
+.doll:nth-child(6) .robe::before {
+  left: 40%;
+}
+.doll:nth-child(6) .flower {
+  z-index: 3;
+  position: absolute;
+}
+.doll:nth-child(6) .flower::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, #D32F2E 2px, #FCB738 3px);
+}
+.doll:nth-child(6) .flower:nth-child(1) {
+  top: 115px;
+  left: 50%;
+  -webkit-transform: translateX(-42px) scale(1.25) rotate(-10deg);
+          transform: translateX(-42px) scale(1.25) rotate(-10deg);
+}
+.doll:nth-child(6) .flower:nth-child(2) {
+  top: 115px;
+  left: 50%;
+  -webkit-transform: translateX(0px) scale(1.25) rotate(-10deg);
+          transform: translateX(0px) scale(1.25) rotate(-10deg);
+}
+.doll:nth-child(6) .flower:nth-child(3) {
+  top: 115px;
+  left: 50%;
+  -webkit-transform: translateX(42px) scale(1.25) rotate(-10deg);
+          transform: translateX(42px) scale(1.25) rotate(-10deg);
+}
+.doll:nth-child(6) .petal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  width: 8px;
+  height: 13px;
+  margin-left: -4px;
+  margin-top: -16px;
+  -webkit-transform-origin: 50% 16px;
+          transform-origin: 50% 16px;
+  background: #FCB738;
+}
+.doll:nth-child(6) .petal-6:nth-child(1) {
+  -webkit-transform: rotate(0deg);
+          transform: rotate(0deg);
+}
+.doll:nth-child(6) .petal-6:nth-child(2) {
+  -webkit-transform: rotate(60deg);
+          transform: rotate(60deg);
+}
+.doll:nth-child(6) .petal-6:nth-child(3) {
+  -webkit-transform: rotate(120deg);
+          transform: rotate(120deg);
+}
+.doll:nth-child(6) .petal-6:nth-child(4) {
+  -webkit-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+.doll:nth-child(6) .petal-6:nth-child(5) {
+  -webkit-transform: rotate(240deg);
+          transform: rotate(240deg);
+}
+.doll:nth-child(6) .petal-6:nth-child(6) {
+  -webkit-transform: rotate(300deg);
+          transform: rotate(300deg);
+}
+.doll:nth-child(6) .belt {
+  background-image: radial-gradient(ellipse 10px 65px at -2px 50%, transparent 4px, #A61314 5px, #A61314 15px, transparent 20px), radial-gradient(ellipse 10px 65px at 202px 50%, transparent 4px, #A61314 5px, #A61314 15px, transparent 25px), linear-gradient(to left, transparent 10px, #A61314 10px, #A61314 190px, transparent 190px);
+  width: 200px;
+  height: 100px;
+  border-radius: 20px;
+  z-index: -1;
+  bottom: 40px;
+}
+.doll:hover .blush {
+  opacity: 0.95;
+  transition: opacity 0.5s ease-in-out 0.5s;
+}
+.doll:hover .head, .doll:hover .hair, .doll:hover .face {
+  -webkit-animation: head-shake 0.15s ease-in-out alternate infinite;
+          animation: head-shake 0.15s ease-in-out alternate infinite;
+}
+.doll:hover .bun, .doll:hover .bow {
+  -webkit-animation: head-shake-2 0.15s ease-in-out alternate infinite;
+          animation: head-shake-2 0.15s ease-in-out alternate infinite;
+}
+
+@-webkit-keyframes head-shake {
+  from {
+    -webkit-transform: translateX(-50%) translateY(0);
+            transform: translateX(-50%) translateY(0);
+  }
+  to {
+    -webkit-transform: translateX(-50%) translateY(10px);
+            transform: translateX(-50%) translateY(10px);
+  }
+}
+
+@keyframes head-shake {
+  from {
+    -webkit-transform: translateX(-50%) translateY(0);
+            transform: translateX(-50%) translateY(0);
+  }
+  to {
+    -webkit-transform: translateX(-50%) translateY(10px);
+            transform: translateX(-50%) translateY(10px);
+  }
+}
+@-webkit-keyframes head-shake-2 {
+  from {
+    -webkit-transform: translateX(-50%) translateY(0);
+            transform: translateX(-50%) translateY(0);
+  }
+  to {
+    -webkit-transform: translateX(-50%) translateY(20px);
+            transform: translateX(-50%) translateY(20px);
+  }
+}
+@keyframes head-shake-2 {
+  from {
+    -webkit-transform: translateX(-50%) translateY(0);
+            transform: translateX(-50%) translateY(0);
+  }
+  to {
+    -webkit-transform: translateX(-50%) translateY(20px);
+            transform: translateX(-50%) translateY(20px);
+  }
+}
+
+</style>
+</head>
+<body>
+
+
+<div class="doll">
+  <div class="hair"></div>
+  <div class="bun"></div>
+  <div class="bow"></div>
+  <div class="head">
+    <div class="fringe"></div>
+    <div class="face">
+      <div class="eyes"></div>
+      <div class="blush"></div>
+      <div class="lips"></div>
+    </div>
+  </div>
+  <div class="body">
+    <div class="robe"></div>
+    <div class="arm left">
+      <div class="flower">
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+      </div>
+      <div class="flower">
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+      </div>
+      <div class="flower">
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+      </div>
+    </div>
+    <div class="arm right">
+      <div class="flower">
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+      </div>
+      <div class="flower">
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+      </div>
+      <div class="flower">
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="doll">
+  <div class="hair"></div>
+  <div class="head">
+    <div class="fringe"></div>
+    <div class="face">
+      <div class="eyes"></div>
+      <div class="blush"></div>
+      <div class="lips"></div>
+    </div>
+  </div>
+  <div class="body">
+    <div class="flower">
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+      <div class="petal petal-5"></div>
+    </div>
+    <div class="robe"></div>
+  </div>
+</div>
+<div class="doll">
+  <div class="hair"></div>
+  <div class="bun">
+    <div class="pin left">
+      <div class="flower">
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+      </div>
+    </div>
+    <div class="pin right">
+      <div class="flower">
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-6"></div>
+      </div>
+    </div>
+  </div>
+  <div class="head">
+    <div class="fringe"></div>
+    <div class="face">
+      <div class="eyes"></div>
+      <div class="blush"></div>
+      <div class="lips"></div>
+    </div>
+  </div>
+  <div class="body">
+    <div class="flower">
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+    </div>
+    <div class="robe"></div>
+  </div>
+</div>
+<div class="doll">
+  <div class="hair"></div>
+  <div class="head">
+    <div class="flower">
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+    </div>
+    <div class="fringe"></div>
+    <div class="face">
+      <div class="eyes"></div>
+      <div class="blush"></div>
+      <div class="lips"></div>
+    </div>
+  </div>
+  <div class="body">
+    <div class="robe"></div>
+  </div>
+</div>
+<div class="doll">
+  <div class="hair">
+    <div class="pin"></div>
+  </div>
+  <div class="bun"></div>
+  <div class="head">
+    <div class="fringe"></div>
+    <div class="face">
+      <div class="eyes"></div>
+      <div class="blush"></div>
+      <div class="lips"></div>
+    </div>
+  </div>
+  <div class="body">
+    <div class="flower">
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+      <div class="petal petal-8"></div>
+    </div>
+    <div class="robe"></div>
+    <div class="belt"></div>
+    <div class="arm left"></div>
+    <div class="arm right"></div>
+  </div>
+</div>
+<div class="doll">
+  <div class="hair"></div>
+  <div class="bun left"></div>
+  <div class="bun right"></div>
+  <div class="head">
+    <div class="fringe"></div>
+    <div class="face">
+      <div class="eyes"></div>
+      <div class="blush"></div>
+      <div class="lips"></div>
+    </div>
+  </div>
+  <div class="body">
+    <div class="flower">
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+    </div>
+    <div class="flower">
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+      <div class="petal petal-6"></div>
+    </div>
+    <div class="robe"></div>
+  </div>
+  <div class="belt"></div>
+</div>
+
+</body>
+</html>
