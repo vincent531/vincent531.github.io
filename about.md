@@ -12,4 +12,4 @@ A place to include any other types of information that you'd like to include abo
 
 ### Contact me
 
-[vincent@webmart.tw](mailto:vincent@webmart.tw)
+[email@domain.com](mailto:vincent@webmart.tw)
