@@ -3,7 +3,8 @@ layout: post
 title: Apple Watch - Workout Carousel
 ---
 
-**Apple Watch - Workout Carousel** 是使用 Owl Carousel 輪播製作的 HTML 頁面幻燈片(https://owlcarousel2.github.io/OwlCarousel2/))
+**Apple Watch - Workout Carousel** 是使用 ([Owl Carousel](https://owlcarousel2.github.io/OwlCarousel2/)) 輪播製作的 HTML 頁面幻燈片
+
 
 ![Apple-Watch - Workout-Carousel 01](https://github.com/vincent531/css/raw/master/images/Apple-Watch-Workout-Carousel-01.png "Apple-Watch - Workout-Carousel 01")
 
