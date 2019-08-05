@@ -21,6 +21,6 @@ title: Apple Watch - Workout Carousel
 
 Apple Watch - Workout Carousel 可以很快的在幾分鐘內，配置一個最小的，響應迅速的幻燈片在部落格上，讓您有更多時間花在撰寫部落格文章上！
 
-## 取得資源?
+## 傳送門
 
 [Apple Watch - Workout Carousel](https://github.com/vincent531/css/blob/master/Apple-Watch%20-%20Workout-Carousel.html) 
