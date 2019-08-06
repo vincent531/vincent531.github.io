@@ -14,4 +14,4 @@ title: Countdown animation
 
 ## 傳送門
 
-[Phone UI Example](https://github.com/vincent531/css/blob/master/Countdown.html) 
+[Countdown animation](https://github.com/vincent531/css/blob/master/Countdown.html) 
